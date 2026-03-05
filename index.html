@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>World Building Apps</title>
+	<style>
+		:root {
+			--bg-top: #f1f7ff;
+			--bg-bottom: #fff7ec;
+			--surface: #ffffff;
+			--text: #1e2433;
+			--muted: #57607a;
+			--primary: #0f5db8;
+			--primary-strong: #0a478c;
+			--border: #d9e0ee;
+			--shadow: 0 12px 28px rgba(18, 33, 63, 0.12);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+			color: var(--text);
+			background: linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+		}
+
+		.page {
+			max-width: 1100px;
+			margin: 0 auto;
+			padding: 24px;
+			display: grid;
+			gap: 16px;
+		}
+
+		.header {
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			box-shadow: var(--shadow);
+			padding: 16px;
+		}
+
+		h1 {
+			margin: 0 0 6px;
+			font-size: clamp(1.35rem, 1.1rem + 1.2vw, 2rem);
+		}
+
+		.subtitle {
+			margin: 0;
+			color: var(--muted);
+			font-size: 0.95rem;
+		}
+
+		.nav {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			box-shadow: var(--shadow);
+			padding: 12px;
+		}
+
+		.tab {
+			appearance: none;
+			border: 1px solid var(--border);
+			border-radius: 999px;
+			background: #f4f7ff;
+			color: var(--text);
+			padding: 8px 14px;
+			font-size: 0.95rem;
+			cursor: pointer;
+			transition: transform 120ms ease, background-color 120ms ease, color 120ms ease;
+		}
+
+		.tab:hover {
+			transform: translateY(-1px);
+		}
+
+		.tab.active {
+			background: var(--primary);
+			border-color: var(--primary);
+			color: #fff;
+		}
+
+		.viewer {
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			box-shadow: var(--shadow);
+			padding: 12px;
+		}
+
+		iframe {
+			width: 100%;
+			height: min(78vh, 900px);
+			border: 1px solid var(--border);
+			border-radius: 10px;
+			background: #fff;
+		}
+
+		.link-row {
+			margin-top: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 12px;
+			flex-wrap: wrap;
+			color: var(--muted);
+			font-size: 0.9rem;
+		}
+
+		.open-link {
+			color: var(--primary-strong);
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.open-link:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body>
+	<main class="page">
+		<section class="header">
+			<h1>World Building App Switcher</h1>
+			<p class="subtitle">Pick an app below to load it in this page.</p>
+		</section>
+
+		<nav class="nav" aria-label="App Navigation">
+			<button class="tab active" type="button" data-app-name="PDF to JPEG" data-app-url="https://peterhillyard.github.io/world-building/pdf-to-jpeg">
+				PDF to JPEG
+			</button>
+			<button class="tab" type="button" data-app-name="Dot Placer" data-app-url="https://peterhillyard.github.io/world-building/dot-placer">
+				Dot Placer
+			</button>
+		</nav>
+
+		<section class="viewer">
+			<iframe
+				id="app-frame"
+				title="PDF to JPEG"
+				src="https://peterhillyard.github.io/world-building/pdf-to-jpeg"
+				loading="lazy"
+			></iframe>
+			<div class="link-row">
+				<span id="current-app">Viewing: PDF to JPEG</span>
+				<a id="open-app-link" class="open-link" href="https://peterhillyard.github.io/world-building/pdf-to-jpeg" target="_blank" rel="noopener noreferrer">
+					Open app in a new tab
+				</a>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		const tabs = Array.from(document.querySelectorAll('.tab'));
+		const appFrame = document.getElementById('app-frame');
+		const currentApp = document.getElementById('current-app');
+		const openAppLink = document.getElementById('open-app-link');
+
+		function activateTab(tab) {
+			const appName = tab.dataset.appName;
+			const appUrl = tab.dataset.appUrl;
+
+			tabs.forEach((btn) => btn.classList.remove('active'));
+			tab.classList.add('active');
+
+			appFrame.title = appName;
+			appFrame.src = appUrl;
+			currentApp.textContent = `Viewing: ${appName}`;
+			openAppLink.href = appUrl;
+		}
+
+		tabs.forEach((tab) => {
+			tab.addEventListener('click', () => activateTab(tab));
+		});
+	</script>
+</body>
+</html>
